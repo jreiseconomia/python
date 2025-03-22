@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compra de Itens - Jogo de Tabuleiro</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .form-container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .response {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+            font-family: monospace;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Realizar Compra</h2>
+
+        <label for="jogador">Nome do Jogador:</label>
+        <input type="text" id="jogador" placeholder="Digite o nome do jogador">
+
+        <label for="item_id">ID do Item:</label>
+        <input type="number" id="item_id" placeholder="Digite o ID do item">
+
+        <button id="comprarBtn">Comprar Item</button>
+
+        <div id="response" class="response"></div>
+    </div>
+
+    <script>
+        // Função para realizar a compra
+        document.getElementById('comprarBtn').addEventListener('click', function() {
+            const jogador = document.getElementById('jogador').value;
+            const itemId = parseInt(document.getElementById('item_id').value);
+
+            if (!jogador || isNaN(itemId)) {
+                document.getElementById('response').innerText = "Por favor, preencha todos os campos!";
+                return;
+            }
+
+            const compraData = {
+                jogador: jogador,
+                item_id: itemId
+            };
+
+            // Fazendo a requisição POST para o endpoint "/comprar"
+            fetch('http://127.0.0.1:8000/comprar', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(compraData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.mensagem) {
+                    document.getElementById('response').innerHTML = `<strong>${data.mensagem}</strong><br>Saldo Restante: ${data.saldo_restante}`;
+                } else {
+                    document.getElementById('response').innerText = "Erro: " + data.detail;
+                }
+            })
+            .catch(error => {
+                document.getElementById('response').innerText = `Erro: ${error.message}`;
+            });
+        });
+    </script>
+</body>
+</html>
