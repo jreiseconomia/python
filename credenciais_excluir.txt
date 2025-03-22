@@ -1,0 +1,10 @@
+uid_banco = adm 
+senha = 12345678
+
+conn_str = (
+    r'DRIVER={SQL Server};'   
+    r'SERVER=SEU_SERVIDOR;'   
+    r'DATABASE=BDCOMPRA;'     
+    r'UID=adm;'               
+    r'PWD=12345678;'          
+)

@@ -19,6 +19,37 @@
 
     <div id="error" style="color: red; display: none;">Usuário ou senha incorretos!</div>
 
-    <script src="assets/login.js"></script>
+    <script>
+        document.getElementById("loginForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+
+            // Enviar dados para o backend Flask
+            fetch('http://127.0.0.1:5000/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, password })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message === "Login bem-sucedido!") {
+                    alert("Login bem-sucedido!");
+                    window.location.href = "https://www.google.com";  // Redireciona para o Google
+                } else {
+                    document.getElementById("error").textContent = data.message;
+                    document.getElementById("error").style.display = "block";
+                }
+            })
+            .catch(error => {
+                console.error("Erro:", error);
+                document.getElementById("error").textContent = "Erro ao autenticar.";
+                document.getElementById("error").style.display = "block";
+            });
+        });
+    </script>
 </body>
 </html>
